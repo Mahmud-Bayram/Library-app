@@ -2,105 +2,111 @@ import sqlite3
 
 import time
 
-class Kitap():
+class Book():
 
-    def __init__(self,isim,yazar,yayınevi,tür,baskı):
+    def __init__(self, name, author, publishingHouse, type, edition):
 
-        self.isim = isim
-        self.yazar = yazar
-        self.yayınevi = yayınevi
-        self.tür = tür
-        self.baskı = baskı
+        self.name = name
+        self.author = author
+        self.publishingHouse = publishingHouse
+        self.type = type
+        self.edition = edition
 
     def __str__(self):
 
-        return "Kitap İsmi: {}\nYazar: {}\nYayınevi: {}\nTür: {}\nBaskı: {}\n".format(self.isim,self.yazar,self.yayınevi,self.tür,self.baskı)
+        return "Book Name: {}\nAuthor: {}\nPublishing House: {}\nType: {}\nEdition: {}\n".format(self.name, self.author, self.publishingHouse, self.type, self.edition)
 
 
-class Kütüphane():
+class Library():
 
     def __init__(self):
 
-        self.baglanti_olustur()
+        self.buildingLink()
 
-    def baglanti_olustur(self):
+    def buildingLink(self):
 
-        self.baglanti = sqlite3.connect("kütüphane.db")
+        self.link = sqlite3.connect("library.db")
 
-        self.cursor = self.baglanti.cursor()
+        self.cursor = self.link.cursor()
 
-        sorgu = "Create Table If not exists kitaplar (isim TEXT,yazar TEXT,yayınevi TEXT,tür TEXT,baskı INT)"
+        query = "Create Table If not exists books (Name TEXT, Author TEXT, Publishing_house TEXT, Type TEXT, Edition INT)"
 
-        self.cursor.execute(sorgu)
+        self.cursor.execute(query)
 
-        self.baglanti.commit()
-    def baglantiyi_kes(self):
-        self.baglanti.close()
+        self.link.commit()
 
-    def kitapları_goster(self):
 
-        sorgu =  "Select * From kitaplar"
+    def breakLink(self):
 
-        self.cursor.execute(sorgu)
+        self.link.close()
 
-        kitaplar = self.cursor.fetchall()
 
-        if (len(kitaplar) == 0):
-            print("Kütüphanede kitap bulunmuyor...")
+    def showBooks(self):
+
+        query =  "Select * From books"
+
+        self.cursor.execute(query)
+
+        books = self.cursor.fetchall()
+
+        if (len(books) == 0):
+            print("There are no books in the library...")
         else:
-            for i in kitaplar:
+            for i in books:
+                book = Book(i[0], i[1], i[2], i[3], i[4])
+                print(book)
 
-                kitap = Kitap(i[0],i[1],i[2],i[3],i[4])
-                print(kitap)
+    def inquiryBook(self, name):
 
-    def kitap_sorgula(self,isim):
+        query = "Select * From Books where Name = ?"
 
-        sorgu = "Select * From kitaplar where isim = ?"
+        self.cursor.execute(query, (name,))
 
-        self.cursor.execute(sorgu,(isim,))
+        books = self.cursor.fetchall()
 
-        kitaplar = self.cursor.fetchall()
-
-        if (len(kitaplar) == 0):
-            print("Böyle bir kitap bulunmuyor.....")
+        if (len(books) == 0):
+            print("There is no such book.....")
         else:
-            kitap = Kitap(kitaplar[0][0],kitaplar[0][1],kitaplar[0][2],kitaplar[0][3],kitaplar[0][4])
+            book = Book(books[0][0], books[0][1], books[0][2], books[0][3], books[0][4])
 
-            print(kitap)
-    def kitap_ekle(self,kitap):
+            print(book)
+    def addBook(self, book):
 
-        sorgu = "Insert into kitaplar Values(?,?,?,?,?)"
+        query = "Insert into Books Values(?,?,?,?,?)"
 
-        self.cursor.execute(sorgu,(kitap.isim,kitap.yazar,kitap.yayınevi,kitap.tür,kitap.baskı))
+        self.cursor.execute(query, (book.name, book.author, book.publishingHouse, book.type, book.edition))
 
-        self.baglanti.commit()
+        self.link.commit()
 
-    def kitap_sil(self,isim):
+    def deleteBook(self, name):
 
-        sorgu = "Delete From kitaplar where isim = ?"
+        query = "Delete From Books where Name = ?"
 
-        self.cursor.execute(sorgu,(isim,))
+        self.cursor.execute(query, (name,))
 
-        self.baglanti.commit()
+        self.link.commit()
 
-    def baskı_yükselt(self,isim):
+    def raiseEdition(self, name):
 
-        sorgu = "Select * From kitaplar where isim = ?"
+        query = "Select * From Books where Name = ?"
 
-        self.cursor.execute(sorgu,(isim,))
+        self.cursor.execute(query, (name,))
 
 
-        kitaplar = self.cursor.fetchall()
+        books = self.cursor.fetchall()
 
-        if (len(kitaplar) == 0):
-            print("Böyle bir kitap bulunmuyor...")
+        if (len(books) == 0):
+            print("There is no such book...")
         else:
-            baskı = kitaplar[0][4]
+            edition = books[0][4]
 
-            baskı += 1
+            edition += 1
 
-            sorgu2 = "Update kitaplar set baskı = ? where isim = ?"
+            query2 = "Update Books set Edition = ? where Name = ?"
 
-            self.cursor.execute(sorgu2,(baskı,isim))
+            self.cursor.execute(query2, (edition, name))
 
-            self.baglanti.commit()
+            self.link.commit()
+            
+            
+            
