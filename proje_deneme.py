@@ -2,129 +2,78 @@ from main import *
 
 print("""***********************************
 
-Kütüphane Programına Hoşgeldiniz.
+Welcome to the library application.
 
-İşlemler;
+Processes:
 
-1. Kitapları Göster
+1. Show Books
 
-2. Kitap Sorgulama
+2. Book Inquiry
 
-3. Kitap Ekle
+3. Add Book
 
-4. Kitap Sil 
+4. Delete Book 
 
-5. Baskı Yükselt
+5. Edition Raise
 
-Çıkmak için 'q' ya basın.
+Click 'q' for exit.
 ***********************************""")
 
-kütüphane = Kütüphane()
+library = Library()
 
 while True:
-    işlem = input("Yapacağınız İşlem:")
+    process = input("Your action:")
 
-    if (işlem == "q"):
-        print("Program Sonlandırılıyor.....")
-        print("Yine bekleriz....")
+    if (process == "q"):
+        print("The program is terminating.....")
+        print("We wait again....")
         break
-    elif (işlem == "1"):
-        kütüphane.kitapları_goster()
+    elif (process == "1"):
+        library.showBooks()
 
-    elif (işlem == "2"):
-        isim = input("Hangi kitabı istiyorsunuz ? ")
-        print("Kitap Sorgulanıyor...")
+    elif (process == "2"):
+        name = input("Which book do you want? ")
+        print("Book inquiry...")
         time.sleep(2)
 
-        kütüphane.kitap_sorgula(isim)
+        library.inquiryBook(name)
 
-    elif (işlem == "3"):
-        isim = input("İsim:")
-        yazar = input("Yazar:")
-        yayınevi = input("Yayınevi:")
-        tür = input("Tür:")
-        baskı = int(input("Baskı"))
+    elif (process == "3"):
+        name = input("Name:")
+        author = input("Author:")
+        publishingHouse= input("Publishing House:")
+        type = input("Type:")
+        edition = int(input("Edition:"))
 
-        yeni_kitap = Kitap(isim,yazar,yayınevi,tür,baskı)
+        newBook = Book(name, author, publishingHouse, type, edition)
 
-        print("Kitap ekleniyor....")
+        print("Adding book....")
         time.sleep(2)
 
-        kütüphane.kitap_ekle(yeni_kitap)
-        print("Kitap Eklendi....")
+        library.addBook(newBook)
+        print("Added book....")
 
 
-    elif (işlem == "4"):
-        isim = input("Hangi kitabı silmek istiyorsunuz ?")
+    elif (process == "4"):
+        name = input("Which book do you want to delete?")
 
-        cevap = input("Emin misiniz ? (E/H)")
-        if (cevap == "E"):
-            print("Kitap Siliniyor...")
+        response = input("Are you sure? (Y/N)")
+        if (response == "Y"):
+            print("Deleting book...")
             time.sleep(2)
-            kütüphane.kitap_sil(isim)
-            print("Kitap silindi....")
+            library.deleteBook(name)
+            print("Deleted book....")
 
 
-    elif (işlem == "5"):
-        isim = input("Hangi kitabın baskısını yükseltmek istiyorsunuz ?")
-        print("Baskı yükseltiliyor....")
+    elif (process == "5"):
+        isim = input("Which book's edition do you want to upgrade?")
+        print("Upgrading edition....")
         time.sleep(2)
-        kütüphane.baskı_yükselt(isim)
-        print("Baskı yükseltildi....")
+        library.raiseEdition(isim)
+        print("Upgraded edition....")
 
     else:
-        print("Geçersiz İşlem...")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        print("Invalid operation...")
 
 
 
